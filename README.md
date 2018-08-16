@@ -21,16 +21,17 @@
 
 * 支持版本: ![](https://img.shields.io/badge/Python-2.x-green.svg) ![](https://img.shields.io/badge/Python-3.x-blue.svg)
 
-* 测试地址: http://123.207.35.36:5010 (单机勿压。感谢)
+因为将所有代码均放入了package文件夹中，和原作者Jhao的master分支结构上差别太大，故生成了此分支。
+放入package中，改善了项目中各模块的import关系，易读性高一些（自认为），项目启动方式也有所变化。
+另，加入了对RedisCluster的支持，对于爬取proxy的utils.WebRequest模块加入了proxy的使用，防止本地IP被proxy分享网站封杀。
+
+亲测可用，功能较为实用，后续需要加入更多的proxy分享站点。
 
 ### 下载安装
 
 * 下载源码:
-
-```shell
-git clone git@github.com:jhao104/proxy_pool.git
-
-或者直接到https://github.com/jhao104/proxy_pool 下载zip文件
+```
+直接到https://github.com/ALLCX/proxy_pool/tree/ng-proxy 下载zip文件
 ```
 
 * 安装依赖:
