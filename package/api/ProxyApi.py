@@ -13,14 +13,13 @@
 """
 __author__ = 'JHao'
 
-import sys
 from werkzeug.wrappers import Response
 from flask import Flask, jsonify, request
 
-sys.path.append('../')
+# sys.path.append('../')
 
-from Util.GetConfig import GetConfig
-from Manager.ProxyManager import ProxyManager
+from package.utils.GetConfig import GetConfig
+from package.manager.ProxyManager import ProxyManager
 
 app = Flask(__name__)
 
@@ -53,8 +52,11 @@ def index():
 
 @app.route('/get/')
 def get():
-    proxy = ProxyManager().get()
-    return proxy if proxy else 'no proxy!'
+    try:
+        proxy = ProxyManager().get()
+        return proxy if proxy else 'no proxy!'
+    except Exception as e:
+        return str(e)
 
 
 @app.route('/refresh/')

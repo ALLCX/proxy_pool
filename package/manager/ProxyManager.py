@@ -15,12 +15,12 @@ __author__ = 'JHao'
 
 import random
 
-from Util import EnvUtil
-from DB.DbClient import DbClient
-from Util.GetConfig import GetConfig
-from Util.LogHandler import LogHandler
-from Util.utilFunction import verifyProxyFormat
-from ProxyGetter.getFreeProxy import GetFreeProxy
+from package.utils import EnvUtil
+from package.database.DbClient import DbClient
+from package.utils.GetConfig import GetConfig
+from package.utils.LogHandler import LogHandler
+from package.utils.utilFunction import verifyProxyFormat
+from package.proxyGetter.getFreeProxy import GetFreeProxy
 
 
 class ProxyManager(object):
@@ -37,7 +37,7 @@ class ProxyManager(object):
 
     def refresh(self):
         """
-        fetch proxy into Db by ProxyGetter
+        fetch proxy into Db by proxyGetter
         :return:
         """
         for proxyGetter in self.config.proxy_getter_functions:
@@ -47,7 +47,9 @@ class ProxyManager(object):
                 self.log.info("{func}: fetch proxy start".format(func=proxyGetter))
                 proxy_iter = [_ for _ in getattr(GetFreeProxy, proxyGetter.strip())()]
             except Exception as e:
-                self.log.error("{func}: fetch proxy fail".format(func=proxyGetter))
+                self.log.error(
+                    "{func}: fetch proxy fail, "
+                    "error message: {error} ".format(func=proxyGetter, error=e.args))
                 continue
             for proxy in proxy_iter:
                 proxy = proxy.strip()

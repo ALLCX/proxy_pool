@@ -12,13 +12,13 @@
 """
 __author__ = 'J_hao'
 
-from Util.GetConfig import GetConfig
+from Util import GetConfig
 
 
 # noinspection PyPep8Naming
 def testGetConfig():
     """
-    test class GetConfig in Util/GetConfig
+    test class GetConfig in utils/GetConfig
     :return:
     """
     gg = GetConfig()

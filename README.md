@@ -47,7 +47,12 @@ pip install -r requirements.txt
 type = SSDB       # 如果使用SSDB或redis数据库，均配置为SSDB
 host = localhost  # db host
 port = 8888       # db port
+password = psssws # db password
 name = proxy      # 默认配置
+
+# 如果db type 设置为 RedisCluster，需要配置如下
+[RedisNodes]
+node1 = {"host": "192.168.245.130", "port": 1079}
 
 # 配置 ProxyGetter
 freeProxyFirst  = 1  # 这里是启动的抓取函数，可在ProxyGetter/getFreeProxy.py 扩展
@@ -65,8 +70,8 @@ port = 5010          # 监听端口
 
 ```shell
 # 如果你的依赖已经安全完成并且具备运行条件,可以直接在Run下运行main.py
-# 到Run目录下:
->>>python main.py
+# 到package目录的父目录下:
+>>>python -m package
 
 # 如果运行成功你应该看到有4个main.py进程
 

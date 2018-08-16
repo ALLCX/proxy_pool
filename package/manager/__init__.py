@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
+# !/usr/bin/env python
 """
 -------------------------------------------------
-   File Name：     test.py  
+   File Name：     __init__.py.py  
    Description :  
    Author :       JHao
-   date：          2017/3/7
+   date：          2016/12/3
 -------------------------------------------------
    Change Activity:
-                   2017/3/7: 
+                   2016/12/3: 
 -------------------------------------------------
 """
-__author__ = 'JHao'
-
-from Schedule import ProxyRefreshSchedule

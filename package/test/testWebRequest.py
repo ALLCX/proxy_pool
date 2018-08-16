@@ -18,7 +18,7 @@ from Util.WebRequest import WebRequest
 # noinspection PyPep8Naming
 def testWebRequest():
     """
-    test class WebRequest in Util/WebRequest.py
+    test class WebRequest in utils/WebRequest.py
     :return:
     """
     wr = WebRequest()

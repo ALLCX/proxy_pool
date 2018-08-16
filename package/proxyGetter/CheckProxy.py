@@ -12,13 +12,13 @@
 """
 __author__ = 'JHao'
 
-import sys
-from getFreeProxy import GetFreeProxy
-from Util.utilFunction import verifyProxyFormat
+# import sys
+from package.proxyGetter.getFreeProxy import GetFreeProxy
+from package.utils.utilFunction import verifyProxyFormat
 
-sys.path.append('../')
+# sys.path.append('../')
 
-from Util.LogHandler import LogHandler
+from package.utils.LogHandler import LogHandler
 
 log = LogHandler('check_proxy', file=False)
 

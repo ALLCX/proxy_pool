@@ -14,17 +14,16 @@
 -------------------------------------------------
 """
 
-import sys
 import time
 import logging
 from threading import Thread
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-sys.path.append('../')
+# sys.path.append('../')
 
-from Util.utilFunction import validUsefulProxy
-from Manager.ProxyManager import ProxyManager
-from Util.LogHandler import LogHandler
+from package.utils.utilFunction import validUsefulProxy
+from package.manager.ProxyManager import ProxyManager
+from package.utils.LogHandler import LogHandler
 
 __author__ = 'JHao'
 

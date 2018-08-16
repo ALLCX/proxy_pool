@@ -9,16 +9,35 @@
 -------------------------------------------------
    Change Activity:
                    2016/11/25: 添加robustCrawl、verifyProxy、getHtmlTree
+                   2018/08/16: 添加validUsefulProxy       A.L.
 -------------------------------------------------
 """
 import requests
 import time
 from lxml import etree
 
-from Util.LogHandler import LogHandler
-from Util.WebRequest import WebRequest
+from package.utils.WebRequest import WebRequest
+
 
 # logger = LogHandler(__name__, stream=False)
+
+
+class getCurrentOutIp(object):
+
+    @staticmethod
+    def get_current_out_ip():
+        """
+        获取公网IP
+        :param
+        :return:
+        """
+        response = requests.get(url='http://httpbin.org/ip')
+        if response.status_code == 200:
+            content_str = response.content.decode('utf8')
+            outer_ip = content_str.split('"')
+            return outer_ip[3]
+        else:
+            raise Exception("httpbin挂了！")
 
 
 # noinspection PyPep8Naming
@@ -64,7 +83,6 @@ def getHtmlTree(url, **kwargs):
               'Accept-Encoding': 'gzip, deflate, sdch',
               'Accept-Language': 'zh-CN,zh;q=0.8',
               }
-    # TODO 取代理服务器用代理服务器访问
     wr = WebRequest()
 
     # delay 2s for per request
@@ -90,6 +108,37 @@ def tcpConnect(proxy):
 # noinspection PyPep8Naming
 def validUsefulProxy(proxy):
     """
+    检验代理是否是可用的高匿代理
+    :param proxy:
+    :return:
+    """
+    if isinstance(proxy, bytes):
+        proxy = proxy.decode('utf8')
+    proxies = {"http": "http://{proxy}".format(proxy=proxy)}
+    try:
+        # 超过10秒的代理就不要了
+        r = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=10, verify=False)
+        if r.status_code == 200:
+            response_ip = r.content.decode('utf8')
+            current_out_ip = getCurrentOutIp.get_current_out_ip()
+            # 如果不是高匿服务器就不要了
+            if response_ip.find(current_out_ip) < 0:
+                return True
+            else:
+                print(response_ip + "is not NG")
+                return False
+            # logger.info('%s is ok' % proxy)
+        else:
+            print("proxy {proxy} failed".format(proxy=proxies))
+            return False
+    except Exception as e:
+        # logger.error(str(e))
+        print(str(e))
+        return False
+
+
+def validTest(proxy):
+    """
     检验代理是否可用
     :param proxy:
     :return:
@@ -98,11 +147,18 @@ def validUsefulProxy(proxy):
         proxy = proxy.decode('utf8')
     proxies = {"http": "http://{proxy}".format(proxy=proxy)}
     try:
-        # 超过20秒的代理就不要了
-        r = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=10, verify=False)
+        # 超过10秒的代理就不要了
+
+        # r = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=10, verify=False)
+        r = requests.get('http://ip.chinaz.com/', proxies=proxies, timeout=10, verify=False)
         if r.status_code == 200:
-            # logger.info('%s is ok' % proxy)
-            return True
+            print(r.content)
+            print(r.content.decode('utf-8'))
     except Exception as e:
         # logger.error(str(e))
+        print(str(e))
         return False
+
+
+if __name__ == '__main__':
+    validTest('')

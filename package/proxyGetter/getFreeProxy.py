@@ -21,11 +21,10 @@ except:
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
-sys.path.append('..')
+# sys.path.append('..')
 
-from Util.WebRequest import WebRequest
-from Util.utilFunction import getHtmlTree
-from Util.utilFunction import verifyProxyFormat
+from package.utils.WebRequest import WebRequest
+from package.utils.utilFunction import getHtmlTree
 
 # for debug to disable insecureWarning
 requests.packages.urllib3.disable_warnings()
@@ -86,6 +85,7 @@ class GetFreeProxy(object):
             for i in range(1, page + 1):
                 url = "http://www.66ip.cn/areaindex_{}/{}.html".format(area_index, i)
                 html_tree = getHtmlTree(url)
+                print("got proxy from second")
                 tr_list = html_tree.xpath("//*[@id='footer']/div/table/tr[position()>1]")
                 if len(tr_list) == 0:
                     continue
@@ -117,12 +117,13 @@ class GetFreeProxy(object):
         """
         url_list = [
             'http://www.xicidaili.com/nn/',  # 高匿
-            'http://www.xicidaili.com/nt/',  # 透明
+            # 'http://www.xicidaili.com/nt/',  # 透明
         ]
         for each_url in url_list:
             for i in range(1, page_count + 1):
                 page_url = each_url + str(i)
                 tree = getHtmlTree(page_url)
+                print("got proxy from 4")
                 proxy_list = tree.xpath('.//table[@id="ip_list"]//tr[position()>1]')
                 for proxy in proxy_list:
                     try:
@@ -138,6 +139,7 @@ class GetFreeProxy(object):
         """
         url = "http://www.goubanjia.com/"
         tree = getHtmlTree(url)
+        print("got proxy from 5")
         proxy_list = tree.xpath('//td[@class="ip"]')
         # 此网站有隐藏的数字干扰，或抓取到多余的数字或.符号
         # 需要过滤掉<p style="display:none;">的内容
@@ -150,7 +152,9 @@ class GetFreeProxy(object):
             try:
                 # :符号裸放在td下，其他放在div span p中，先分割找出ip，再找port
                 ip_addr = ''.join(each_proxy.xpath(xpath_str))
+                print(ip_addr)
                 port = each_proxy.xpath(".//span[contains(@class, 'port')]/text()")[0]
+                print(port)
                 yield '{}:{}'.format(ip_addr, port)
             except Exception as e:
                 pass
@@ -228,6 +232,7 @@ class GetFreeProxy(object):
         request = WebRequest()
         for url in urls:
             r = request.get(url)
+            print("got proxy from 10")
             proxies = re.findall(r'<td>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})</td>[\s\S]*?<td>(\d+)</td>', r.text)
             for proxy in proxies:
                 yield ":".join(proxy)
@@ -240,13 +245,14 @@ class GetFreeProxy(object):
         """
         urls = [
             'http://www.iphai.com/free/ng',
-            'http://www.iphai.com/free/np',
+            # 'http://www.iphai.com/free/np',
             'http://www.iphai.com/free/wg',
-            'http://www.iphai.com/free/wp'
+            # 'http://www.iphai.com/free/wp'
         ]
         request = WebRequest()
         for url in urls:
             r = request.get(url)
+            print("got proxy from 11")
             proxies = re.findall(r'<td>\s*?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s*?</td>[\s\S]*?<td>\s*?(\d+)\s*?</td>',
                                  r.text)
             for proxy in proxies:
@@ -275,7 +281,9 @@ class GetFreeProxy(object):
         墙外网站 cn-proxy
         :return:
         """
-        urls = ['http://cn-proxy.com/', 'http://cn-proxy.com/archives/218']
+        urls = [
+            'http://cn-proxy.com/',
+            'http://cn-proxy.com/archives/218',]
         request = WebRequest()
         for url in urls:
             r = request.get(url)
@@ -310,9 +318,10 @@ class GetFreeProxy(object):
 
 
 if __name__ == '__main__':
-    from CheckProxy import CheckProxy
+
+    from ProxyGetter.CheckProxy import CheckProxy
 
     CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxyFifth)
-    CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxySecond)
+    # CheckProxy.checkGetProxyFunc(GetFreeProxy.freeProxySecond)
 
-    CheckProxy.checkAllGetProxyFunc()
+    # CheckProxy.checkAllGetProxyFunc()

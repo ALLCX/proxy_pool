@@ -12,18 +12,17 @@
 """
 __author__ = 'JHao'
 
-import sys
 import time
 
 try:
-    from Queue import Queue  # py3
+    from Queue import Queue  # py2
 except:
-    from queue import Queue  # py2
+    from queue import Queue  # py3
 
-sys.path.append('../')
+# sys.path.append('../')
 
-from Schedule.ProxyCheck import ProxyCheck
-from Manager.ProxyManager import ProxyManager
+from package.schedule.ProxyCheck import ProxyCheck
+from package.manager.ProxyManager import ProxyManager
 
 
 class ProxyValidSchedule(ProxyManager, object):

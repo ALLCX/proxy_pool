@@ -18,7 +18,7 @@ from Util.LogHandler import LogHandler
 # noinspection PyPep8Naming
 def testLogHandler():
     """
-    test function LogHandler  in Util/LogHandler
+    test function LogHandler  in utils/LogHandler
     :return:
     """
     log = LogHandler('test')

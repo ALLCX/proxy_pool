@@ -2,7 +2,7 @@
 """
 -------------------------------------------------
    File Name：     testGetFreeProxy
-   Description :   test model ProxyGetter/getFreeProxy
+   Description :   test model proxyGetter/getFreeProxy
    Author :        J_hao
    date：          2017/7/31
 -------------------------------------------------
@@ -12,10 +12,7 @@
 """
 __author__ = 'J_hao'
 
-import re
 import sys
-import requests
-
 
 try:
     from importlib import reload  # py3 实际不会实用，只是为了不显示语法错误
@@ -23,15 +20,15 @@ except:
     reload(sys)
     sys.setdefaultencoding('utf-8')
 
-sys.path.append('..')
+# sys.path.append('..')
 from ProxyGetter.getFreeProxy import GetFreeProxy
-from Util.GetConfig import GetConfig
+from Util import GetConfig
 
 
 # noinspection PyPep8Naming
 def testGetFreeProxy():
     """
-    test class GetFreeProxy in ProxyGetter/GetFreeProxy
+    test class GetFreeProxy in proxyGetter/GetFreeProxy
     :return:
     """
     gc = GetConfig()

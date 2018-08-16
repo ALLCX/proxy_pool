@@ -8,7 +8,7 @@
    date：          2016/12/2
 -------------------------------------------------
    Change Activity:
-                   2016/12/2:
+        2018/08/16:    add RedisClusterClient support   A.L.
 -------------------------------------------------
 """
 __author__ = 'JHao'
@@ -16,8 +16,8 @@ __author__ = 'JHao'
 import os
 import sys
 
-from Util.GetConfig import GetConfig
-from Util.utilClass import Singleton
+from package.utils.GetConfig import GetConfig
+from package.utils.utilClass import Singleton
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,7 +28,7 @@ class DbClient(object):
 
     目前存放代理的table/collection/hash有两种：
         raw_proxy： 存放原始的代理；
-        useful_proxy_queue： 存放检验后的代理；
+        useful_proxy： 存放检验后的代理；
 
     抽象方法定义：
         get(proxy): 返回proxy的信息；
@@ -44,7 +44,7 @@ class DbClient(object):
 
         所有方法需要相应类去具体实现：
             SSDB：SsdbClient.py
-            REDIS:RedisClient.py
+            REDIS:RedisClusterClient.py
 
     """
 
@@ -60,7 +60,7 @@ class DbClient(object):
 
     def __initDbClient(self):
         """
-        init DB Client
+        init database Client
         :return:
         """
         __type = None
@@ -68,14 +68,22 @@ class DbClient(object):
             __type = "SsdbClient"
         elif "REDIS" == self.config.db_type:
             __type = "RedisClient"
+        elif "REDIS_CLUSTER" == self.config.db_type:
+            __type = "RedisClusterClient"
         elif "MONGODB" == self.config.db_type:
             __type = "MongodbClient"
         else:
             pass
-        assert __type, 'type error, Not support DB type: {}'.format(self.config.db_type)
-        self.client = getattr(__import__(__type), __type)(name=self.config.db_name,
-                                                          host=self.config.db_host,
-                                                          port=self.config.db_port)
+        assert __type, 'type error, Not support database type: {}'.format(self.config.db_type)
+
+        if __type == "RedisClusterClient":
+            self.client = getattr(__import__(__type), __type)(name=self.config.db_name,
+                                                              startup_nodes=self.config.db_redis_nodes,
+                                                              password=self.config.db_password)
+        else:
+            self.client = getattr(__import__(__type), __type)(name=self.config.db_name,
+                                                              host=self.config.db_host,
+                                                              port=self.config.db_port)
 
     def get(self, key, **kwargs):
         return self.client.get(key, **kwargs)

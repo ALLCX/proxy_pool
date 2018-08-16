@@ -14,8 +14,9 @@
 __author__ = 'JHao'
 
 import os
-from Util.utilClass import ConfigParse
-from Util.utilClass import LazyProperty
+from package.utils.utilClass import ConfigParse
+from package.utils.utilClass import LazyProperty
+import json
 
 
 class GetConfig(object):
@@ -38,6 +39,23 @@ class GetConfig(object):
         return self.config_file.get('DB', 'name')
 
     @LazyProperty
+    def db_password(self):
+        return self.config_file.get('DB', 'password')
+
+    @LazyProperty
+    def db_redis_nodes(self):
+
+        redis_nodes_list = []
+        node_list = self.config_file.items('RedisNodes')
+        for i, value in enumerate(node_list):
+
+            node_json = json.loads(value[1])
+
+            redis_nodes_list.append(node_json)
+        # print("redis_nodes_list is {redis_nodes_list}".format(redis_nodes_list=redis_nodes_list))
+        return redis_nodes_list
+
+    @LazyProperty
     def db_host(self):
         return self.config_file.get('DB', 'host')
 
@@ -51,7 +69,7 @@ class GetConfig(object):
 
     @LazyProperty
     def host_ip(self):
-        return self.config_file.get('HOST','ip')
+        return self.config_file.get('HOST', 'ip')
 
     @LazyProperty
     def host_port(self):
@@ -61,8 +79,11 @@ if __name__ == '__main__':
     gg = GetConfig()
     print(gg.db_type)
     print(gg.db_name)
-    print(gg.db_host)
-    print(gg.db_port)
+    print(gg.db_redis_nodes)
+
+    print(type(gg.db_redis_nodes))
+
+    print(gg.db_password)
     print(gg.proxy_getter_functions)
     print(gg.host_ip)
     print(gg.host_port)

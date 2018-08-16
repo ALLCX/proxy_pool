@@ -7,7 +7,7 @@
    date：          2017/7/31
 -------------------------------------------------
    Change Activity:
-                   2017/7/31:
+        2018/08/16:     use proxy in get func       A.L.
 -------------------------------------------------
 """
 __author__ = 'J_hao'
@@ -16,11 +16,15 @@ from requests.models import Response
 import requests
 import random
 import time
+import sys
+# sys.path.append('../')
+
+from package.manager import ProxyManager
 
 
 class WebRequest(object):
     def __init__(self, *args, **kwargs):
-        pass
+        self.proxy_manager = ProxyManager.ProxyManager()
 
     @property
     def user_agent(self):
@@ -51,7 +55,19 @@ class WebRequest(object):
                 'Connection': 'keep-alive',
                 'Accept-Language': 'zh-CN,zh;q=0.8'}
 
-    def get(self, url, header=None, retry_time=5, timeout=30,
+    @property
+    def proxy(self):
+        """
+        get proxy if any
+        :return:
+        """
+        try:
+            proxy = self.proxy_manager.get()
+            return proxy if proxy else None
+        except Exception as e:
+            print(str(e))
+
+    def get(self, url, header=None, retry_time=5, timeout=20,
             retry_flag=list(), retry_interval=5, *args, **kwargs):
         """
         get method
@@ -69,8 +85,14 @@ class WebRequest(object):
         if header and isinstance(header, dict):
             headers.update(header)
         while True:
+            proxies = self.proxy
             try:
-                html = requests.get(url, headers=headers, timeout=timeout, **kwargs)
+                if proxies:
+                    proxies = {"http": "http://{proxy}".format(proxy=proxies)}
+                    print("proxies uesed in webrequest is: ", proxies)
+                    html = requests.get(url, headers=headers, timeout=timeout, proxies=proxies, **kwargs)
+                else:
+                    html = requests.get(url, headers=headers, timeout=timeout, **kwargs)
                 if any(f in html.content for f in retry_flag):
                     raise Exception
                 return html
@@ -83,3 +105,7 @@ class WebRequest(object):
                     resp.status_code = 200
                     return resp
                 time.sleep(retry_interval)
+
+
+if __name__ == '__main__':
+    print(sys.path)
